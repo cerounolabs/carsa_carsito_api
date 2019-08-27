@@ -49,7 +49,7 @@
         $val07  = $request->getParsedBody()['usuario_var07'];
         $val08  = $request->getParsedBody()['usuario_var08'];
         $val09  = $request->getParsedBody()['usuario_var09'];
-        $val10  = date('Y-m-d');
+        $val10  = date('Y-m-d H:i:s.v');
         $val11  = date('H:i:s');
         
         if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val07) && isset($val08) && isset($val09)) {
