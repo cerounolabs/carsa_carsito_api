@@ -11,12 +11,14 @@
         $val07  = $request->getParsedBody()['usuario_var07'];
         $val08  = $request->getParsedBody()['usuario_var08'];
         $val09  = $request->getParsedBody()['usuario_var09'];
-        $val10  = date('Y-m-d H:i:s.v');
-        $val11  = date('H:i:s');
+        $val10  = $request->getParsedBody()['usuario_var10'];
+        $val11  = date('Ymd H:i:s.v');
+        $val12  = date('H:i:s');
         
         if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val07) && isset($val08) && isset($val09)) {
-            $sql    = "INSERT INTO COMPLOG (COMPLOGTEC, COMPLOGTDC, COMPLOGDOC, COMPLOGMAI, COMPLOGTEL, COMPLOGFEC, COMPLOGHOR, COMPLOGUUI, COMPLOGPIN, COMPLOGHUI, COMPLOGHUH, COMPLOGHUA, COMPLOGHUR) VALUES ('A', '".$val01."', '".$val02."', '".$val03."', '', '".$val10."', '".$val11."', '".$val05."', '".$val04."', '".$val06."', '".$val07."', '".$val08."', '".$val09."')";
-            $stmt   = sqlsrv_query($mssqlConn, $sql);
+            $sql    = "INSERT INTO COMPLOG (COMPLOGTEC, COMPLOGTDC, COMPLOGDOC, COMPLOGMAI, COMPLOGTEL, COMPLOGFEC, COMPLOGHOR, COMPLOGUUI, COMPLOGPIN, COMPLOGHUI, COMPLOGHUH, COMPLOGHUA, COMPLOGHUR) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $parm   = array('A', $val01, $val02, $val03, $val10, $val11, $val12, $val05, $val04, $val06, $val07, $val08, $val09);
+            $stmt   = sqlsrv_query($mssqlConn, $sql, $parm);
 
             if ($stmt === FALSE) {
                 header("Content-Type: application/json; charset=utf-8");
@@ -49,7 +51,7 @@
         $val07  = $request->getParsedBody()['usuario_var07'];
         $val08  = $request->getParsedBody()['usuario_var08'];
         $val09  = $request->getParsedBody()['usuario_var09'];
-        $val10  = date('Y-m-d H:i:s.v');
+        $val10  = date('Ymd H:i:s');
         $val11  = date('H:i:s');
         
         if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val07) && isset($val08) && isset($val09)) {
