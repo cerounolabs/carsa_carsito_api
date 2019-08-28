@@ -11,7 +11,7 @@
         $val07  = $request->getParsedBody()['usuario_var07'];
         $val08  = $request->getParsedBody()['usuario_var08'];
         $val09  = $request->getParsedBody()['usuario_var09'];
-        $val10  = $request->getParsedBody()['usuario_var10'];
+//        $val10  = $request->getParsedBody()['usuario_var10'];
         $val11  = date('Ymd H:i:s.v');
         $val12  = date('H:i:s');
         
@@ -51,24 +51,26 @@
         $val07  = $request->getParsedBody()['usuario_var07'];
         $val08  = $request->getParsedBody()['usuario_var08'];
         $val09  = $request->getParsedBody()['usuario_var09'];
-        $val10  = date('Ymd H:i:s');
-        $val11  = date('H:i:s');
+//        $val10  = $request->getParsedBody()['usuario_var10'];
+        $val11  = date('Ymd H:i:s');
+        $val12  = date('H:i:s');
         
         if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val07) && isset($val08) && isset($val09)) {
-            $sql = "SELECT
+            $sql    = "SELECT
             a.AACUEN        AS      cliente_cuenta,
             a.AaNom1        AS		cliente_nombre,
-            a.AaNom1        AS		cliente_apellido,
+            a.AaApe1        AS		cliente_apellido,
             a.AgDocu        AS      cliente_documento_tipo,
             a.AaDocu        AS      cliente_documento_numero,
             a.AaFech        AS      cliente_fecha_nacimiento
             
             FROM FSD0011 a
             
-            WHERE a.AgDocu = '$val01' AND a.AaDocu = '$val02'
+            WHERE a.AgDocu = 1 AND a.AaDocu = '2217315'
             ORDER BY a.AACUEN";
 
-            $stmt = sqlsrv_query($mssqlConn, $sql);
+            $parm   = array($val01, $val02);
+            $stmt   = sqlsrv_query($mssqlConn, $sql, $parm);
 
             if ($stmt === FALSE) {
                 header("Content-Type: application/json; charset=utf-8");
