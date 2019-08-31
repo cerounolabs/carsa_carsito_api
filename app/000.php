@@ -39,38 +39,28 @@
         return $json;
     });
 
-    $app->get('/v1/000/login', function($request) {
+    $app->get('/v1/000/login/{uuid}', function($request) {
         require __DIR__.'/../src/connect.php';
 
-		$val01  = $request->getParsedBody()['usuario_var01'];
-        $val02  = $request->getParsedBody()['usuario_var02'];
-        $val03  = $request->getParsedBody()['usuario_var03'];
-        $val04  = $request->getParsedBody()['usuario_var04'];
-        $val05  = $request->getParsedBody()['usuario_var05'];
-        $val06  = $request->getParsedBody()['usuario_var06'];
-        $val07  = $request->getParsedBody()['usuario_var07'];
-        $val08  = $request->getParsedBody()['usuario_var08'];
-        $val09  = $request->getParsedBody()['usuario_var09'];
-//        $val10  = $request->getParsedBody()['usuario_var10'];
-        $val11  = date('Ymd H:i:s');
-        $val12  = date('H:i:s');
+		$val01  = $request->getAttribute('uuid');
         
-        if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val07) && isset($val08) && isset($val09)) {
+        if (isset($val01)) {
             $sql    = "SELECT
-            a.AACUEN        AS      cliente_cuenta,
-            a.AaNom1        AS		cliente_nombre,
-            a.AaApe1        AS		cliente_apellido,
-            a.AgDocu        AS      cliente_documento_tipo,
-            a.AaDocu        AS      cliente_documento_numero,
-            a.AaFech        AS      cliente_fecha_nacimiento
+            b.AACUEN        AS      cliente_cuenta,
+            b.AaNom1        AS		cliente_nombre,
+            b.AaApe1        AS		cliente_apellido,
+            b.AgDocu        AS      cliente_documento_tipo,
+            b.AaDocu        AS      cliente_documento_numero,
+            b.AaFech        AS      cliente_fecha_nacimiento
             
-            FROM FSD0011 a
+            FROM COMPLOG a
+            INNER JOIN FSD0011 b ON a.COMPLOGDOC = b.AaDocu
             
-            WHERE a.AgDocu = 1 AND a.AaDocu = '2217315'
-            ORDER BY a.AACUEN";
+            WHERE a.COMPLOGUUI = ?
+            ORDER BY a.COMPLOGCOD";
 
-            $parm   = array($val01, $val02);
-            $stmt   = sqlsrv_query($mssqlConn, $sql, $parm);
+            $parm   = array($val01);
+            $stmt   = sqlsrv_query($mssqlConn, $sql);
 
             if ($stmt === FALSE) {
                 header("Content-Type: application/json; charset=utf-8");
