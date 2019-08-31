@@ -51,13 +51,14 @@
             b.AaApe1        AS		cliente_apellido,
             b.AgDocu        AS      cliente_documento_tipo,
             b.AaDocu        AS      cliente_documento_numero,
-            b.AaFech        AS      cliente_fecha_nacimiento
+            b.AaFech        AS      cliente_fecha_nacimiento,
+            a.COMPLOGUUI    AS      login_uuid
             
             FROM COMPLOG a
             INNER JOIN FSD0011 b ON a.COMPLOGDOC = b.AaDocu
             
             WHERE a.COMPLOGUUI = ?
-            ORDER BY a.COMPLOGCOD";
+            ORDER BY a.COMPLOGCOD DESC";
 
             $parm   = array($val01);
             $stmt   = sqlsrv_query($mssqlConn, $sql, $parm);
@@ -73,7 +74,8 @@
                         'cliente_apellido'          => $row['cliente_apellido'],
                         'cliente_documento_tipo'    => $row['cliente_documento_tipo'],
                         'cliente_documento_numero'  => $row['cliente_documento_numero'],
-                        'cliente_fecha_nacimiento'  => $row['cliente_fecha_nacimiento']
+                        'cliente_fecha_nacimiento'  => $row['cliente_fecha_nacimiento'],
+                        'login_uuid'                => $row['cliente_fecha_nacimiento'],
                     );
 
                     $result[] = $detalle;
