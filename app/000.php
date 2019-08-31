@@ -60,7 +60,7 @@
             ORDER BY a.COMPLOGCOD";
 
             $parm   = array($val01);
-            $stmt   = sqlsrv_query($mssqlConn, $sql);
+            $stmt   = sqlsrv_query($mssqlConn, $sql, $parm);
 
             if ($stmt === FALSE) {
                 header("Content-Type: application/json; charset=utf-8");
