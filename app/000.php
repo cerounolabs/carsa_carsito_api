@@ -11,7 +11,7 @@
         $val07  = $request->getParsedBody()['usuario_var07'];
         $val08  = $request->getParsedBody()['usuario_var08'];
         $val09  = $request->getParsedBody()['usuario_var09'];
-//        $val10  = $request->getParsedBody()['usuario_var10'];
+        $val10  = '';//$request->getParsedBody()['usuario_var10'];
         $val11  = date('Ymd H:i:s.v');
         $val12  = date('H:i:s');
         
