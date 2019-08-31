@@ -75,7 +75,7 @@
                         'cliente_documento_tipo'    => $row['cliente_documento_tipo'],
                         'cliente_documento_numero'  => $row['cliente_documento_numero'],
                         'cliente_fecha_nacimiento'  => $row['cliente_fecha_nacimiento'],
-                        'login_uuid'                => $row['cliente_fecha_nacimiento'],
+                        'login_uuid'                => $row['cliente_fecha_nacimiento']
                     );
 
                     $result[] = $detalle;
@@ -91,7 +91,8 @@
                         'cliente_apellido'          => '',
                         'cliente_documento_tipo'    => '',
                         'cliente_documento_numero'  => '',
-                        'cliente_fecha_nacimiento'  => ''
+                        'cliente_fecha_nacimiento'  => '',
+                        'login_uuid'                => ''
                     );
 
                     header("Content-Type: application/json; charset=utf-8");
