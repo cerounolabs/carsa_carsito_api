@@ -51,8 +51,9 @@
             b.AaApe1                        AS		cliente_apellido,
             b.AgDocu                        AS      cliente_documento_tipo,
             b.AaDocu                        AS      cliente_documento_numero,
-            convert(date, b.AaFech, 103)    AS      cliente_fecha_nacimiento,
-            a.COMPLOGUUI                    AS      login_uuid
+            CONVERT(date, b.AaFech, 103)    AS      cliente_fecha_nacimiento,
+            a.COMPLOGUUI                    AS      login_uuid,
+            a.COMPLOGMAI                    AS      login_mail
             
             FROM COMPLOG a
             INNER JOIN FSD0011 b ON a.COMPLOGDOC = b.AaDocu
@@ -75,7 +76,8 @@
                         'cliente_documento_tipo'    => $row['cliente_documento_tipo'],
                         'cliente_documento_numero'  => $row['cliente_documento_numero'],
                         'cliente_fecha_nacimiento'  => $row['cliente_fecha_nacimiento'],
-                        'login_uuid'                => $row['login_uuid']
+                        'login_uuid'                => $row['login_uuid'],
+                        'login_mail'                => $row['login_mail'],
                     );
 
                     $result[] = $detalle;
@@ -92,7 +94,8 @@
                         'cliente_documento_tipo'    => '',
                         'cliente_documento_numero'  => '',
                         'cliente_fecha_nacimiento'  => '',
-                        'login_uuid'                => ''
+                        'login_uuid'                => '',
+                        'login_mail'                => ''
                     );
 
                     header("Content-Type: application/json; charset=utf-8");
