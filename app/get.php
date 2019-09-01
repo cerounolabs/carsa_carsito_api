@@ -81,13 +81,13 @@
         return $json;
     });
 
-    $app->get('/v1/100/top05/{codigo}', function($request) {
+    $app->get('/v1/100/top06/{codigo}', function($request) {
         require __DIR__.'/../src/connect.php';
 
 		$val01  = $request->getAttribute('codigo');
         
         if (isset($val01)) {
-            $sql    = "SELECT TOP 5
+            $sql    = "SELECT TOP 6
 
             a.cucuen                        AS      caja_cuenta,
             a.cuope1                        AS      caja_operacion,
