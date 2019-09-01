@@ -161,3 +161,86 @@
         
         return $json;
     });
+
+    $app->get('/v1/100/pendiente/{codigo}', function($request) {
+        require __DIR__.'/../src/connect.php';
+
+		$val01  = $request->getAttribute('codigo');
+        
+        if (isset($val01)) {
+            $sql    = "SELECT
+
+            a.aacuen                        AS      operacion_cuenta,
+            a.BFOPE1                        AS      operacion_numero,
+            a.BfCant                        AS      operacion_cuota_cantidad,
+            a.BfPend                        AS      operacion_cuota_pendiente,
+            (a.BfCant - a.BfPend)           AS      operacion_cuota_cancelado,
+            b.BeCta                         AS      operacion_proximo_cuota,
+            CONVERT(date, b.Be1Vto, 103)    AS      operacion_proximo_vencimiento,
+            c.COBPTOTCU                     AS      operacion_proximo_monto
+            
+            FROM FSD0122 a
+            INNER JOIN FSD0171 b ON a.BFOPE1 = b.BeOpe1 AND a.AACUEN = b.AACUEN
+            INNER JOIN COBPEN01 c ON a.BFOPE1 = c.COBPOPE AND a.AACUEN = c.COBPCUE AND b.BeCta = c.COBPCUO
+            
+            WHERE a.AACUEN = ? AND a.BfEsta = 7 AND b.BeCta = (a.BfCant - a.BfPend + 1)
+            ORDER BY a.BFOPE1 DESC";
+
+            $parm   = array($val01);
+            $stmt   = sqlsrv_query($mssqlConn, $sql, $parm);
+
+            if ($stmt === FALSE) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Hubo un error al momento de ingresar'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            } else {
+                while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                    foreach ($row['operacion_proximo_vencimiento'] as $key => $value) {
+                        if($key == 'date'){
+                            $fecha = date_format(date_create($value), 'd/m/Y');
+                        }
+                    }
+                    
+                    $detalle = array(
+                        'operacion_cuenta'              => $row['operacion_cuenta'],
+                        'operacion_numero'              => number_format($row['operacion_numero'], 0, ',', '.'),
+                        'operacion_cuota_cantidad'      => number_format($row['operacion_cuota_cantidad'], 0, ',', '.'),
+                        'operacion_cuota_pendiente'     => number_format($row['operacion_cuota_pendiente'], 0, ',', '.'),
+                        'operacion_cuota_cancelado'     => number_format($row['operacion_cuota_cancelado'], 0, ',', '.'),
+                        'operacion_proximo_cuota'       => number_format($row['operacion_proximo_cuota'], 0, ',', '.'),
+                        'operacion_proximo_vencimiento' => $fecha,
+                        'operacion_proximo_monto'       => number_format($row['operacion_proximo_monto'], 0, ',', '.')
+                    );
+
+                    $result[] = $detalle;
+                }
+
+                if (isset($result)){
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Consulta con exito', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                } else {
+                    $detalle = array(
+                        'operacion_cuenta'              => '',
+                        'operacion_numero'              => '',
+                        'operacion_cuota_cantidad'      => '',
+                        'operacion_cuota_pendiente'     => '',
+                        'operacion_cuota_cancelado'     => '',
+                        'operacion_proximo_cuota'       => '',
+                        'operacion_proximo_vencimiento' => '',
+                        'operacion_proximo_monto'       => ''
+                    );
+
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                }
+            }
+
+            sqlsrv_free_stmt($stmt);
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        sqlsrv_close($mssqlConn);
+        
+        return $json;
+    });
