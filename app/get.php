@@ -81,7 +81,7 @@
         return $json;
     });
 
-    $app->get('/v1/100/top5/{codigo}', function($request) {
+    $app->get('/v1/100/top05/{codigo}', function($request) {
         require __DIR__.'/../src/connect.php';
 
 		$val01  = $request->getAttribute('codigo');
