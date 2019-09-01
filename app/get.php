@@ -120,12 +120,12 @@
                     
                     $detalle = array(
                         'caja_cuenta'               => $row['caja_cuenta'],
-                        'caja_operacion'            => number_format($row['caja_operacion'], 0, ',', '.'),
-                        'caja_cuota'                => number_format($row['caja_cuota'], 0, ',', '.'),
+                        'caja_operacion'            => number_format($row['caja_operacion'], 0, ',', ''),
+                        'caja_cuota'                => number_format($row['caja_cuota'], 0, ',', ''),
                         'caja_fecha'                => $fecha,
                         'caja_hora'                 => $row['caja_hora'],
-                        'caja_monto'                => number_format($row['caja_monto'], 0, ',', '.'),
-                        'caja_numero_movimiento'    => number_format($row['caja_numero_movimiento'], 0, ',', '.'),
+                        'caja_monto'                => number_format($row['caja_monto'], 0, ',', ' '),
+                        'caja_numero_movimiento'    => number_format($row['caja_numero_movimiento'], 0, ',', ''),
                         'caja_numero_factura'       => $row['caja_numero_factura'],
                         'caja_numero_recibo'        => $row['caja_numero_recibo']
                     );
@@ -205,13 +205,13 @@
                     
                     $detalle = array(
                         'operacion_cuenta'              => $row['operacion_cuenta'],
-                        'operacion_numero'              => number_format($row['operacion_numero'], 0, ',', '.'),
-                        'operacion_cuota_cantidad'      => number_format($row['operacion_cuota_cantidad'], 0, ',', '.'),
-                        'operacion_cuota_pendiente'     => number_format($row['operacion_cuota_pendiente'], 0, ',', '.'),
-                        'operacion_cuota_cancelado'     => number_format($row['operacion_cuota_cancelado'], 0, ',', '.'),
-                        'operacion_proximo_cuota'       => number_format($row['operacion_proximo_cuota'], 0, ',', '.'),
+                        'operacion_numero'              => number_format($row['operacion_numero'], 0, ',', ''),
+                        'operacion_cuota_cantidad'      => number_format($row['operacion_cuota_cantidad'], 0, ',', ''),
+                        'operacion_cuota_pendiente'     => number_format($row['operacion_cuota_pendiente'], 0, ',', ''),
+                        'operacion_cuota_cancelado'     => number_format($row['operacion_cuota_cancelado'], 0, ',', ''),
+                        'operacion_proximo_cuota'       => number_format($row['operacion_proximo_cuota'], 0, ',', ''),
                         'operacion_proximo_vencimiento' => $fecha,
-                        'operacion_proximo_monto'       => number_format($row['operacion_proximo_monto'], 0, ',', '.')
+                        'operacion_proximo_monto'       => number_format($row['operacion_proximo_monto'], 0, ',', ' ')
                     );
 
                     $result[] = $detalle;
@@ -289,12 +289,12 @@
                     
                     $detalle = array(
                         'caja_cuenta'               => $row['caja_cuenta'],
-                        'caja_operacion'            => number_format($row['caja_operacion'], 0, ',', '.'),
-                        'caja_cuota'                => number_format($row['caja_cuota'], 0, ',', '.'),
+                        'caja_operacion'            => number_format($row['caja_operacion'], 0, ',', ''),
+                        'caja_cuota'                => number_format($row['caja_cuota'], 0, ',', ''),
                         'caja_fecha'                => $fecha,
                         'caja_hora'                 => $row['caja_hora'],
-                        'caja_monto'                => number_format($row['caja_monto'], 0, ',', '.'),
-                        'caja_numero_movimiento'    => number_format($row['caja_numero_movimiento'], 0, ',', '.'),
+                        'caja_monto'                => number_format($row['caja_monto'], 0, ',', ' '),
+                        'caja_numero_movimiento'    => number_format($row['caja_numero_movimiento'], 0, ',', ''),
                         'caja_numero_factura'       => $row['caja_numero_factura'],
                         'caja_numero_recibo'        => $row['caja_numero_recibo']
                     );
