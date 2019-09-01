@@ -81,13 +81,13 @@
         return $json;
     });
 
-    $app->get('/v1/100/top10/{codigo}', function($request) {
+    $app->get('/v1/100/top5/{codigo}', function($request) {
         require __DIR__.'/../src/connect.php';
 
 		$val01  = $request->getAttribute('codigo');
         
         if (isset($val01)) {
-            $sql    = "SELECT TOP 10
+            $sql    = "SELECT TOP 5
 
             a.cucuen                        AS      caja_cuenta,
             a.cuope1                        AS      caja_operacion,
@@ -119,11 +119,11 @@
                     
                     $detalle = array(
                         'caja_cuenta'               => $row['caja_cuenta'],
-                        'caja_operacion'            => number_format($row['caja_operacion'], 0, '', '.'),
+                        'caja_operacion'            => number_format($row['caja_operacion'], 0, ',', '.'),
                         'caja_fecha'                => $fecha,
                         'caja_hora'                 => $row['caja_hora'],
-                        'caja_monto'                => number_format($row['caja_monto'], 0, '', '.'),
-                        'caja_numero_movimiento'    => number_format($row['caja_numero_movimiento'], 0, '', '.'),
+                        'caja_monto'                => number_format($row['caja_monto'], 0, ',', '.'),
+                        'caja_numero_movimiento'    => number_format($row['caja_numero_movimiento'], 0, ',', '.'),
                         'caja_numero_factura'       => $row['caja_numero_factura'],
                         'caja_numero_recibo'        => $row['caja_numero_recibo']
                     );
