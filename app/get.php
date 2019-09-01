@@ -162,13 +162,13 @@
         return $json;
     });
 
-    $app->get('/v1/100/pendiente/{codigo}', function($request) {
+    $app->get('/v1/100/top03/{codigo}', function($request) {
         require __DIR__.'/../src/connect.php';
 
 		$val01  = $request->getAttribute('codigo');
         
         if (isset($val01)) {
-            $sql    = "SELECT
+            $sql    = "SELECT TOP 3
 
             a.aacuen                        AS      operacion_cuenta,
             a.BFOPE1                        AS      operacion_numero,
