@@ -91,6 +91,7 @@
 
             a.cucuen                        AS      caja_cuenta,
             a.cuope1                        AS      caja_operacion,
+            a.cucuot                        AS      caja_cuota,
             CONVERT(date, a.Cufech, 103)    AS      caja_fecha,
             a.cuhora                        AS      caja_hora,
             a.CuMont                        AS      caja_monto,
@@ -120,6 +121,7 @@
                     $detalle = array(
                         'caja_cuenta'               => $row['caja_cuenta'],
                         'caja_operacion'            => number_format($row['caja_operacion'], 0, ',', '.'),
+                        'caja_cuota'                => number_format($row['caja_cuota'], 0, ',', '.'),
                         'caja_fecha'                => $fecha,
                         'caja_hora'                 => $row['caja_hora'],
                         'caja_monto'                => number_format($row['caja_monto'], 0, ',', '.'),
@@ -138,6 +140,7 @@
                     $detalle = array(
                         'caja_cuenta'               => '',
                         'caja_operacion'            => '',
+                        'caja_cuota'                => '',
                         'caja_fecha'                => '',
                         'caja_hora'                 => '',
                         'caja_monto'                => '',
