@@ -30,13 +30,19 @@
                 $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Hubo un error al momento de ingresar'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
             } else {
                 while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                    foreach ($row['cliente_fecha_nacimiento'] as $key => $value) {
+                        if($key == 'date'){
+                            $fecha = date_format(date_create($value), 'd/m/Y');
+                        }
+                    }
+
                     $detalle = array(
                         'cliente_cuenta'            => $row['cliente_cuenta'],
                         'cliente_nombre'            => $row['cliente_nombre'],
                         'cliente_apellido'          => $row['cliente_apellido'],
                         'cliente_documento_tipo'    => $row['cliente_documento_tipo'],
                         'cliente_documento_numero'  => $row['cliente_documento_numero'],
-                        'cliente_fecha_nacimiento'  => $row['cliente_fecha_nacimiento'],
+                        'cliente_fecha_nacimiento'  => $fecha,
                         'login_uuid'                => $row['login_uuid'],
                         'login_mail'                => $row['login_mail']
                     );
@@ -105,10 +111,16 @@
                 $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Hubo un error al momento de ingresar'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
             } else {
                 while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                    foreach ($row['caja_fecha'] as $key => $value) {
+                        if($key == 'date'){
+                            $fecha = date_format(date_create($value), 'd/m/Y');
+                        }
+                    }
+                    
                     $detalle = array(
                         'caja_cuenta'               => $row['caja_cuenta'],
                         'caja_operacion'            => $row['caja_operacion'],
-                        'caja_fecha'                => $row['caja_fecha'],
+                        'caja_fecha'                => $fecha,
                         'caja_hora'                 => $row['caja_hora'],
                         'caja_monto'                => $row['caja_monto'],
                         'caja_numero_movimiento'    => $row['caja_numero_movimiento'],
