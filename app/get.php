@@ -247,3 +247,89 @@
         
         return $json;
     });
+
+    $app->get('/v1/200/{codigo}/{fechaDesde}/{fechaHasta}', function($request) {
+        require __DIR__.'/../src/connect.php';
+
+        $val01  = $request->getAttribute('codigo');
+        $val02  = $request->getAttribute('fechaDesde');
+        $val03  = $request->getAttribute('fechaHasta');
+        
+        if (isset($val01) && isset($val02) && isset($val03)) {
+            $sql    = "SELECT
+
+            a.cucuen                        AS      caja_cuenta,
+            a.cuope1                        AS      caja_operacion,
+            a.cucuot                        AS      caja_cuota,
+            CONVERT(date, a.Cufech, 103)    AS      caja_fecha,
+            a.cuhora                        AS      caja_hora,
+            a.CuMont                        AS      caja_monto,
+            a.cumonn                        AS      caja_numero_movimiento,
+            a.cufact                        AS      caja_numero_factura,
+            a.CURECIBO                      AS      caja_numero_recibo
+            
+            FROM FSD015 a
+
+            WHERE a.cucuen = ? AND a.Cufech >= ? AND a.Cufech <= ?
+            ORDER BY a.Cufech DESC";
+
+            $parm   = array($val01, $val02, $val03);
+            $stmt   = sqlsrv_query($mssqlConn, $sql, $parm);
+
+            if ($stmt === FALSE) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Hubo un error al momento de ingresar'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            } else {
+                while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                    foreach ($row['caja_fecha'] as $key => $value) {
+                        if($key == 'date'){
+                            $fecha = date_format(date_create($value), 'd/m/Y');
+                        }
+                    }
+                    
+                    $detalle = array(
+                        'caja_cuenta'               => $row['caja_cuenta'],
+                        'caja_operacion'            => number_format($row['caja_operacion'], 0, ',', '.'),
+                        'caja_cuota'                => number_format($row['caja_cuota'], 0, ',', '.'),
+                        'caja_fecha'                => $fecha,
+                        'caja_hora'                 => $row['caja_hora'],
+                        'caja_monto'                => number_format($row['caja_monto'], 0, ',', '.'),
+                        'caja_numero_movimiento'    => number_format($row['caja_numero_movimiento'], 0, ',', '.'),
+                        'caja_numero_factura'       => $row['caja_numero_factura'],
+                        'caja_numero_recibo'        => $row['caja_numero_recibo']
+                    );
+
+                    $result[] = $detalle;
+                }
+
+                if (isset($result)){
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Consulta con exito', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                } else {
+                    $detalle = array(
+                        'caja_cuenta'               => '',
+                        'caja_operacion'            => '',
+                        'caja_cuota'                => '',
+                        'caja_fecha'                => '',
+                        'caja_hora'                 => '',
+                        'caja_monto'                => '',
+                        'caja_numero_movimiento'    => '',
+                        'caja_numero_factura'       => '',
+                        'caja_numero_recibo'        => ''
+                    );
+
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                }
+            }
+
+            sqlsrv_free_stmt($stmt);
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        sqlsrv_close($mssqlConn);
+        
+        return $json;
+    });
