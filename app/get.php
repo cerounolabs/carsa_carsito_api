@@ -186,7 +186,7 @@
             INNER JOIN FSD0171 b ON a.BFOPE1 = b.BeOpe1 AND a.AACUEN = b.AACUEN
             INNER JOIN COBPEN01 c ON a.BFOPE1 = c.COBPOPE AND a.AACUEN = c.COBPCUE AND b.BeCta = c.COBPCUO
             
-            WHERE a.AACUEN = ? AND a.BfEsta = 7 AND b.BeCta = (a.BfCant - a.BfPend + 1)
+            WHERE a.AACUEN = ? AND a.BfEsta = 7
             ORDER BY a.BFOPE1 DESC";
 
             $parm   = array($val01);
