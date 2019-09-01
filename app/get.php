@@ -119,11 +119,11 @@
                     
                     $detalle = array(
                         'caja_cuenta'               => $row['caja_cuenta'],
-                        'caja_operacion'            => $row['caja_operacion'],
+                        'caja_operacion'            => number_format($row['caja_operacion'], 0, '', '.'),
                         'caja_fecha'                => $fecha,
                         'caja_hora'                 => $row['caja_hora'],
-                        'caja_monto'                => $row['caja_monto'],
-                        'caja_numero_movimiento'    => $row['caja_numero_movimiento'],
+                        'caja_monto'                => number_format($row['caja_monto'], 0, '', '.'),
+                        'caja_numero_movimiento'    => number_format($row['caja_numero_movimiento'], 0, '', '.'),
                         'caja_numero_factura'       => $row['caja_numero_factura'],
                         'caja_numero_recibo'        => $row['caja_numero_recibo']
                     );
