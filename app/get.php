@@ -252,8 +252,8 @@
         require __DIR__.'/../src/connect.php';
 
         $val01  = $request->getAttribute('codigo');
-        $val02  = $request->getAttribute('fechaDesde');
-        $val03  = $request->getAttribute('fechaHasta');
+        $val02  = date_format(date_create($request->getAttribute('fechaDesde')), 'd/m/Y');
+        $val03  = date_format(date_create($request->getAttribute('fechaHasta')), 'd/m/Y');
         
         if (isset($val01) && isset($val02) && isset($val03)) {
             $sql    = "SELECT
