@@ -117,10 +117,17 @@
                             $fecha = date_format(date_create($value), 'd/m/Y');
                         }
                     }
+
+                    if ($row['caja_cuota'] != 0){
+                        $tipo = 'COBRO DE CUOTA';
+                    } else {
+                        $tipo = 'DESEMBOLSO';
+                    }
                     
                     $detalle = array(
                         'caja_cuenta'               => $row['caja_cuenta'],
                         'caja_operacion'            => number_format($row['caja_operacion'], 0, ',', ''),
+                        'caja_movimiento'           => $tipo,
                         'caja_cuota'                => number_format($row['caja_cuota'], 0, ',', ''),
                         'caja_fecha'                => $fecha,
                         'caja_hora'                 => $row['caja_hora'],
@@ -140,6 +147,7 @@
                     $detalle = array(
                         'caja_cuenta'               => '',
                         'caja_operacion'            => '',
+                        'caja_movimiento'           => '',
                         'caja_cuota'                => '',
                         'caja_fecha'                => '',
                         'caja_hora'                 => '',
@@ -286,10 +294,17 @@
                             $fecha = date_format(date_create($value), 'd/m/Y');
                         }
                     }
+
+                    if ($row['caja_cuota'] != 0){
+                        $tipo = 'COBRO DE CUOTA';
+                    } else {
+                        $tipo = 'DESEMBOLSO';
+                    }
                     
                     $detalle = array(
                         'caja_cuenta'               => $row['caja_cuenta'],
                         'caja_operacion'            => number_format($row['caja_operacion'], 0, ',', ''),
+                        'caja_movimiento'           => $tipo,
                         'caja_cuota'                => number_format($row['caja_cuota'], 0, ',', ''),
                         'caja_fecha'                => $fecha,
                         'caja_hora'                 => $row['caja_hora'],
@@ -309,6 +324,7 @@
                     $detalle = array(
                         'caja_cuenta'               => '',
                         'caja_operacion'            => '',
+                        'caja_movimiento'           => '',
                         'caja_cuota'                => '',
                         'caja_fecha'                => '',
                         'caja_hora'                 => '',
