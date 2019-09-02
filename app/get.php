@@ -260,15 +260,16 @@
         return $json;
     });
 
-    $app->get('/v1/200/{codigo}/{fechaDesde}/{fechaHasta}', function($request) {
+    $app->get('/v1/200/{codigo}/{fechaDesde}/{fechaHasta}/{estadoOperacion}', function($request) {
         require __DIR__.'/../src/connect.php';
 
         $val01  = $request->getAttribute('codigo');
         $val02  = date_format(date_create($request->getAttribute('fechaDesde')), 'd/m/Y');
         $val03  = date_format(date_create($request->getAttribute('fechaHasta')), 'd/m/Y');
+        $val04  = $request->getAttribute('estadoOperacion');
         
         if (isset($val01) && isset($val02) && isset($val03)) {
-            $sql    = "SELECT
+            $sql_0  = "SELECT
 
             a.cucuen                        AS      caja_cuenta,
             a.cuope1                        AS      caja_operacion,
@@ -287,8 +288,33 @@
             WHERE a.cucuen = ? AND a.Cufech >= ? AND a.Cufech <= ?
             ORDER BY a.Cufech DESC";
 
-            $parm   = array($val01, $val02, $val03);
-            $stmt   = sqlsrv_query($mssqlConn, $sql, $parm);
+            $sql_1  = "SELECT
+
+            a.cucuen                        AS      caja_cuenta,
+            a.cuope1                        AS      caja_operacion,
+            a.cucuot                        AS      caja_cuota,
+            b.crnomb                        AS      caja_banca,
+            CONVERT(date, a.Cufech, 103)    AS      caja_fecha,
+            a.cuhora                        AS      caja_hora,
+            a.CuMont                        AS      caja_monto,
+            a.cumonn                        AS      caja_numero_movimiento,
+            a.cufact                        AS      caja_numero_factura,
+            a.CURECIBO                      AS      caja_numero_recibo
+
+            FROM FSD015 a
+            INNER JOIN FST020 b ON a.cuagen = b.crbanca
+            INNER JOIN FSD0122 c ON a.cuope1 = c.bfope1 AND a.cucuen = c.aacuen
+
+            WHERE a.cucuen = ? AND a.Cufech >= ? AND a.Cufech <= ? AND c.bfEsta = ?
+            ORDER BY a.Cufech DESC";
+
+            if($val04 == 0){
+                $parm   = array($val01, $val02, $val03);
+                $stmt   = sqlsrv_query($mssqlConn, $sql_0, $parm);
+            } else {
+                $parm   = array($val01, $val02, $val03, $val04);
+                $stmt   = sqlsrv_query($mssqlConn, $sql_1, $parm);
+            }
 
             if ($stmt === FALSE) {
                 header("Content-Type: application/json; charset=utf-8");
