@@ -308,7 +308,7 @@
             WHERE a.cucuen = ? AND a.Cufech >= ? AND a.Cufech <= ? AND c.bfEsta = ?
             ORDER BY a.Cufech DESC";
 
-            if($val04 == 0){
+            if($val04 == 1){
                 $parm   = array($val01, $val02, $val03);
                 $stmt   = sqlsrv_query($mssqlConn, $sql_0, $parm);
             } else {
