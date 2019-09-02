@@ -92,6 +92,7 @@
             a.cucuen                        AS      caja_cuenta,
             a.cuope1                        AS      caja_operacion,
             a.cucuot                        AS      caja_cuota,
+            b.crnomb                        AS      caja_banca,
             CONVERT(date, a.Cufech, 103)    AS      caja_fecha,
             a.cuhora                        AS      caja_hora,
             a.CuMont                        AS      caja_monto,
@@ -100,6 +101,7 @@
             a.CURECIBO                      AS      caja_numero_recibo
             
             FROM FSD015 a
+            INNER JOIN FST020 b ON a.cuagen = b.crbanca
 
             WHERE a.cucuen = ?
             ORDER BY a.Cufech DESC";
@@ -119,15 +121,16 @@
                     }
 
                     if ($row['caja_cuota'] != 0){
-                        $tipo = 'COBRO DE CUOTA';
+                        $movimiento = 'COBRO DE CUOTA';
                     } else {
-                        $tipo = 'DESEMBOLSO';
+                        $movimiento = 'DESEMBOLSO';
                     }
                     
                     $detalle = array(
                         'caja_cuenta'               => $row['caja_cuenta'],
                         'caja_operacion'            => number_format($row['caja_operacion'], 0, ',', ''),
-                        'caja_movimiento'           => $tipo,
+                        'caja_movimiento'           => $movimiento,
+                        'caja_banca'                => $row['caja_banca'],
                         'caja_cuota'                => number_format($row['caja_cuota'], 0, ',', ''),
                         'caja_fecha'                => $fecha,
                         'caja_hora'                 => $row['caja_hora'],
@@ -148,6 +151,7 @@
                         'caja_cuenta'               => '',
                         'caja_operacion'            => '',
                         'caja_movimiento'           => '',
+                        'caja_banca'                => '',
                         'caja_cuota'                => '',
                         'caja_fecha'                => '',
                         'caja_hora'                 => '',
@@ -269,6 +273,7 @@
             a.cucuen                        AS      caja_cuenta,
             a.cuope1                        AS      caja_operacion,
             a.cucuot                        AS      caja_cuota,
+            b.crnomb                        AS      caja_banca,
             CONVERT(date, a.Cufech, 103)    AS      caja_fecha,
             a.cuhora                        AS      caja_hora,
             a.CuMont                        AS      caja_monto,
@@ -277,6 +282,7 @@
             a.CURECIBO                      AS      caja_numero_recibo
             
             FROM FSD015 a
+            INNER JOIN FST020 b ON a.cuagen = b.crbanca
 
             WHERE a.cucuen = ? AND a.Cufech >= ? AND a.Cufech <= ?
             ORDER BY a.Cufech DESC";
@@ -296,16 +302,17 @@
                     }
 
                     if ($row['caja_cuota'] != 0){
-                        $tipo = 'COBRO DE CUOTA';
+                        $movimiento = 'COBRO DE CUOTA';
                     } else {
-                        $tipo = 'DESEMBOLSO';
+                        $movimiento = 'DESEMBOLSO';
                     }
                     
                     $detalle = array(
                         'caja_cuenta'               => $row['caja_cuenta'],
                         'caja_operacion'            => number_format($row['caja_operacion'], 0, ',', ''),
-                        'caja_movimiento'           => $tipo,
+                        'caja_movimiento'           => $movimiento,
                         'caja_cuota'                => number_format($row['caja_cuota'], 0, ',', ''),
+                        'caja_banca'                => $row['caja_banca'],
                         'caja_fecha'                => $fecha,
                         'caja_hora'                 => $row['caja_hora'],
                         'caja_monto'                => number_format($row['caja_monto'], 0, ',', ' '),
@@ -325,6 +332,7 @@
                         'caja_cuenta'               => '',
                         'caja_operacion'            => '',
                         'caja_movimiento'           => '',
+                        'caja_banca'                => '',
                         'caja_cuota'                => '',
                         'caja_fecha'                => '',
                         'caja_hora'                 => '',
