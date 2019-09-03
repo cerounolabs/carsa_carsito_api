@@ -103,7 +103,7 @@
             FROM FSD015 a
             INNER JOIN FST020 b ON a.cuagen = b.crbanca
 
-            WHERE a.cucuen = ?
+            WHERE a.cucuen = ? AND a.cutipo IN (51, 53)
             ORDER BY a.Cufech DESC";
 
             $parm   = array($val01);
@@ -128,14 +128,14 @@
                     
                     $detalle = array(
                         'caja_cuenta'               => $row['caja_cuenta'],
-                        'caja_operacion'            => number_format($row['caja_operacion'], 0, ',', ''),
+                        'caja_operacion'            => $row['caja_operacion'],
                         'caja_movimiento'           => $movimiento,
                         'caja_banca'                => $row['caja_banca'],
-                        'caja_cuota'                => number_format($row['caja_cuota'], 0, ',', ''),
+                        'caja_cuota'                => $row['caja_cuota'],
                         'caja_fecha'                => $fecha,
                         'caja_hora'                 => $row['caja_hora'],
-                        'caja_monto'                => number_format($row['caja_monto'], 0, ',', ' '),
-                        'caja_numero_movimiento'    => number_format($row['caja_numero_movimiento'], 0, ',', ''),
+                        'caja_monto'                => $row['caja_monto'],
+                        'caja_numero_movimiento'    => $row['caja_numero_movimiento'],
                         'caja_numero_factura'       => $row['caja_numero_factura'],
                         'caja_numero_recibo'        => $row['caja_numero_recibo']
                     );
@@ -217,13 +217,13 @@
                     
                     $detalle = array(
                         'operacion_cuenta'              => $row['operacion_cuenta'],
-                        'operacion_numero'              => number_format($row['operacion_numero'], 0, ',', ''),
-                        'operacion_cuota_cantidad'      => number_format($row['operacion_cuota_cantidad'], 0, ',', ''),
-                        'operacion_cuota_pendiente'     => number_format($row['operacion_cuota_pendiente'], 0, ',', ''),
-                        'operacion_cuota_cancelado'     => number_format($row['operacion_cuota_cancelado'], 0, ',', ''),
-                        'operacion_proximo_cuota'       => number_format($row['operacion_proximo_cuota'], 0, ',', ''),
+                        'operacion_numero'              => $row['operacion_numero'],
+                        'operacion_cuota_cantidad'      => $row['operacion_cuota_cantidad'],
+                        'operacion_cuota_pendiente'     => $row['operacion_cuota_pendiente'],
+                        'operacion_cuota_cancelado'     => $row['operacion_cuota_cancelado'],
+                        'operacion_proximo_cuota'       => $row['operacion_proximo_cuota'],
                         'operacion_proximo_vencimiento' => $fecha,
-                        'operacion_proximo_monto'       => number_format($row['operacion_proximo_monto'], 0, ',', ' ')
+                        'operacion_proximo_monto'       => $row['operacion_proximo_monto']
                     );
 
                     $result[] = $detalle;
@@ -285,7 +285,7 @@
             FROM FSD015 a
             INNER JOIN FST020 b ON a.cuagen = b.crbanca
 
-            WHERE a.cucuen = ? AND a.Cufech >= ? AND a.Cufech <= ?
+            WHERE a.cucuen = ? AND a.Cufech >= ? AND a.Cufech <= ? AND a.cutipo IN (51, 53)
             ORDER BY a.Cufech DESC";
 
             $sql_1  = "SELECT
@@ -335,14 +335,14 @@
                     
                     $detalle = array(
                         'caja_cuenta'               => $row['caja_cuenta'],
-                        'caja_operacion'            => number_format($row['caja_operacion'], 0, ',', ''),
+                        'caja_operacion'            => $row['caja_operacion'],
                         'caja_movimiento'           => $movimiento,
-                        'caja_cuota'                => number_format($row['caja_cuota'], 0, ',', ''),
+                        'caja_cuota'                => $row['caja_cuota'],
                         'caja_banca'                => $row['caja_banca'],
                         'caja_fecha'                => $fecha,
                         'caja_hora'                 => $row['caja_hora'],
-                        'caja_monto'                => number_format($row['caja_monto'], 0, ',', ' '),
-                        'caja_numero_movimiento'    => number_format($row['caja_numero_movimiento'], 0, ',', ''),
+                        'caja_monto'                => $row['caja_monto'],
+                        'caja_numero_movimiento'    => $row['caja_numero_movimiento'],
                         'caja_numero_factura'       => $row['caja_numero_factura'],
                         'caja_numero_recibo'        => $row['caja_numero_recibo']
                     );
