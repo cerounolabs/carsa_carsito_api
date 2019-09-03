@@ -70,7 +70,7 @@
                         'caja_usuario'              => $row['caja_usuario'],
                         'operacion_cantidad_cuota'  => $row['operacion_cantidad_cuota'],
                         'cliente_nombre_completo'   => $row['cliente_nombre_completo'],
-                        'cliente_documento_tipo'    => $tipoDocumento ,
+                        'cliente_documento_tipo'    => $tipoDocumento,
                         'cliente_documento_numero'  => $row['cliente_documento_numero']
                     );
 
