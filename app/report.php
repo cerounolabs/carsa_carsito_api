@@ -31,7 +31,7 @@
             ORDER BY a.Cufech DESC";
 
             $parm   = array($val01);
-            $stmt   = sqlsrv_query($mssqlConn, $sql_0, $parm);
+            $stmt   = sqlsrv_query($mssqlConn, $sql, $parm);
 
             if ($stmt === FALSE) {
                 header("Content-Type: application/json; charset=utf-8");
