@@ -51,9 +51,9 @@
                     }
 
                     if ($row['cliente_documento_tipo'] == 1){
-                        $tipoDocumento = 'C.I.P.'
+                        $tipoDocumento = 'C.I.P.';
                     } else {
-                        $tipoDocumento = 'R.U.C.'
+                        $tipoDocumento = 'R.U.C.';
                     }
    
                     $detalle = array(
