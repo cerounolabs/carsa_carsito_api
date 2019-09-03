@@ -22,13 +22,13 @@
             c.AgDocu                        AS      cliente_documento_tipo,
             c.AaDocu                        AS      cliente_documento_numero,
             d.awcalle                       AS      cliente_direccion,
-            d.awtelf1                       AS      cliente_telefono,
+            d.awtel1                        AS      cliente_telefono,
             d.awcelu                        AS      cliente_celular
 
             FROM FSD015 a
             INNER JOIN FSD0122 b ON a.cucuen = b.aacuen AND a.cuope1 = b.bfope1
             INNER JOIN FSD0011 c ON a.cucuen = c.aacuen
-            INNER JOIN FSD022 d ON a.cucuen = d.aacuen
+            LEFT JOIN FSD022 d ON a.cucuen = d.aacuen
 
             WHERE a.cumonn = ?
             ORDER BY a.Cufech DESC";
