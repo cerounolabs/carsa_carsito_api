@@ -20,12 +20,16 @@
             b.bfcant                        AS      operacion_cantidad_cuota,
             c.aanom                         AS      cliente_nombre_completo,
             c.AgDocu                        AS      cliente_documento_tipo,
-            c.AaDocu                        AS      cliente_documento_numero
+            c.AaDocu                        AS      cliente_documento_numero,
+            d.awcalle                       AS      cliente_direccion,
+            d.awtelf1                       AS      cliente_telefono,
+            d.awcelu                        AS      cliente_celular
 
 
             FROM FSD015 a
             INNER JOIN FSD0122 b ON a.cucuen = b.aacuen AND a.cuope1 = b.bfope1
             INNER JOIN FSD0011 c ON a.cucuen = c.aacuen
+            INNER JOIN FSD022 d ON a.cucuen = d.aacuen
 
             WHERE a.cumonn = ?
             ORDER BY a.Cufech DESC";
@@ -71,7 +75,10 @@
                         'operacion_cantidad_cuota'  => $row['operacion_cantidad_cuota'],
                         'cliente_nombre_completo'   => $row['cliente_nombre_completo'],
                         'cliente_documento_tipo'    => $tipoDocumento,
-                        'cliente_documento_numero'  => $row['cliente_documento_numero']
+                        'cliente_documento_numero'  => $row['cliente_documento_numero'],
+                        'cliente_direccion'         => $row['cliente_direccion'],
+                        'cliente_telefono'          => $row['cliente_telefono'],
+                        'cliente_celular'           => $row['cliente_celular']
                     );
 
                     $result[] = $detalle;
@@ -96,7 +103,10 @@
                         'operacion_cantidad_cuota'  => '',
                         'cliente_nombre_completo'   => '',
                         'cliente_documento_tipo'    => '',
-                        'cliente_documento_numero'  => ''
+                        'cliente_documento_numero'  => '',
+                        'cliente_direccion'         => '',
+                        'cliente_telefono'          => '',
+                        'cliente_celular'           => ''
                     );
 
                     header("Content-Type: application/json; charset=utf-8");
