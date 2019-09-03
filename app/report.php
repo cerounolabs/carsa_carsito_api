@@ -25,7 +25,6 @@
             d.awtelf1                       AS      cliente_telefono,
             d.awcelu                        AS      cliente_celular
 
-
             FROM FSD015 a
             INNER JOIN FSD0122 b ON a.cucuen = b.aacuen AND a.cuope1 = b.bfope1
             INNER JOIN FSD0011 c ON a.cucuen = c.aacuen
