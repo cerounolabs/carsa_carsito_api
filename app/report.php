@@ -64,6 +64,12 @@
                 $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Hubo un error al momento de ingresar'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
             } else {
                 while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                    foreach ($row['comprobante_timbrado_vencimiento'] as $key => $value) {
+                        if($key == 'date'){
+                            $fecha_timbrado = date_format(date_create($value), 'd/m/Y');
+                        }
+                    }
+
                     foreach ($row['movimiento_fecha_original'] as $key => $value) {
                         if($key == 'date'){
                             $fecha_original = date_format(date_create($value), 'd/m/Y');
@@ -86,7 +92,7 @@
                         'comprobante_codigo'                => $row['comprobante_codigo'],
                         'comprobante_tipo'                  => $tipo,
                         'comprobante_timbrado_numero'       => $row['comprobante_timbrado_numero'],
-                        'comprobante_timbrado_vencimiento'  => $row['comprobante_timbrado_vencimiento'],
+                        'comprobante_timbrado_vencimiento'  => $fecha_timbrado,
                         'comprobante_numero'                => $row['comprobante_numero'],
                         'comprobante_cantidad_impreso'      => $row['comprobante_cantidad_impreso'],
                         'comprobante_importe'               => $row['comprobante_importe'],
