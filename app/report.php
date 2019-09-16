@@ -11,6 +11,7 @@
             CONVERT(date, a.COMPCABCTV, 103)    AS      comprobante_timbrado_vencimiento,
             a.COMPCABCNU                        AS      comprobante_numero,
             a.COMPCABCCI                        AS      comprobante_cantidad_impreso,
+            a.COMPCABCIM                        AS      comprobante_importe,
 
             a.COMPCABMNO                        AS      movimiento_numero_original,
             a.COMPCABMNR                        AS      movimiento_numero_reversion,
@@ -88,6 +89,7 @@
                         'comprobante_timbrado_vencimiento'  => $row['comprobante_timbrado_vencimiento'],
                         'comprobante_numero'                => $row['comprobante_numero'],
                         'comprobante_cantidad_impreso'      => $row['comprobante_cantidad_impreso'],
+                        'comprobante_importe'               => $row['comprobante_importe'],
                         'movimiento_numero_original'        => $row['movimiento_numero_original'],
                         'movimiento_numero_reversion'       => $row['movimiento_numero_reversion'],
                         'movimiento_usuario_original'       => $row['movimiento_usuario_original'],
@@ -129,6 +131,7 @@
                         'comprobante_timbrado_vencimiento'  => '',
                         'comprobante_numero'                => '',
                         'comprobante_cantidad_impreso'      => '',
+                        'comprobante_importe'               => '',
                         'movimiento_numero_original'        => '',
                         'movimiento_numero_reversion'       => '',
                         'movimiento_usuario_original'       => '',
@@ -171,7 +174,6 @@
         
         return $json;
     });
-
 
     $app->get('/v1/report/100/detalle/{codigo}', function($request) {
         require __DIR__.'/../src/connect.php';
