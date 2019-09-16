@@ -88,23 +88,53 @@
         
         if (isset($val01)) {
             $sql    = "SELECT TOP 6
+            a.COMPCABCTN                        AS      comprobante_timbrado_numero,
+            CONVERT(date, a.COMPCABCTV, 103)    AS      comprobante_timbrado_vencimiento,
+            a.COMPCABCNU                        AS      comprobante_numero,
+            a.COMPCABCCI                        AS      comprobante_cantidad_impreso,
 
-            a.cucuen                        AS      caja_cuenta,
-            a.cuope1                        AS      caja_operacion,
-            a.cucuot                        AS      caja_cuota,
-            b.crnomb                        AS      caja_banca,
-            CONVERT(date, a.Cufech, 103)    AS      caja_fecha,
-            a.cuhora                        AS      caja_hora,
-            a.CuMont                        AS      caja_monto,
-            a.cumonn                        AS      caja_numero_movimiento,
-            a.cufact                        AS      caja_numero_factura,
-            a.CURECIBO                      AS      caja_numero_recibo
+            a.COMPCABMNO                        AS      movimiento_numero_original,
+            a.COMPCABMNR                        AS      movimiento_numero_reversion,
+            a.COMPCABMUO                        AS      movimiento_usuario_original,
+            a.COMPCABMUR                        AS      movimiento_usuario_reversion,
+            CONVERT(date, a.COMPCABMFO, 103)    AS      movimiento_fecha_original,
+            CONVERT(date, a.COMPCABMFR, 103)    AS      movimiento_fecha_reversion,
+            a.COMPCABMHO                        AS      movimiento_hora_original,
+            a.COMPCABMHR                        AS      movimiento_hora_reversion,
+
+            a.COMPCABONU                        AS      operacion_numero,
+            a.COMPCABOCU                        AS      operacion_cuota,
+
+            a.COMPCABPNO                        AS      persona_nombre,
+            a.COMPCABPDO                        AS      persona_documento,
+            a.COMPCABPCU                        AS      persona_cuenta,
+            a.COMPCABPDI                        AS      persona_direccion,
+            a.COMPCABPTE                        AS      persona_telefono,
+
+            b.COMPESTCOD                        AS      estado_codigo,
+            b.COMPESTNOM                        AS      estado_nombre,
+
+            c.COMPTIPCOD                        AS      tipo_codigo,
+            c.COMPTIPNOM                        AS      tigo_nombre,
+
+            d.COMPCONCOD                        AS      condicion_codigo,
+            d.COMPCONNOM                        AS      condicion_nombre,
+
+            e.COMPPAGCOD                        AS      pago_codigo,
+            e.COMPPAGNOM                        AS      pago_nombre, 
             
-            FROM FSD015 a
-            INNER JOIN FST020 b ON a.cuagen = b.crbanca
+            f.crbanca                           AS      banca_codigo,
+            f.crnomb                            AS      banca_nombre
 
-            WHERE a.cucuen = ? AND a.cutipo IN (51, 53)
-            ORDER BY a.Cufech DESC";
+            FROM COMPCAB a
+            INNER JOIN COMPEST b ON a.COMPESTCOD = b.COMPESTCOD
+            INNER JOIN COMPTIP c ON a.COMPTIPCOD = c.COMPTIPCOD
+            INNER JOIN COMPCON d ON a.COMPCONCOD = d.COMPCONCOD
+            INNER JOIN COMPPAG e ON a.COMPPAGCOD = e.COMPPAGCOD
+            INNER JOIN FST020 f ON a.COMPCABOBA = f.crbanca
+
+            WHERE a.COMPCABPCU = ?
+            ORDER BY a.c DESC";
 
             $parm   = array($val01);
             $stmt   = sqlsrv_query($mssqlConn, $sql, $parm);
@@ -114,30 +144,55 @@
                 $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Hubo un error al momento de ingresar'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
             } else {
                 while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                    foreach ($row['caja_fecha'] as $key => $value) {
+                    foreach ($row['movimiento_fecha_original'] as $key => $value) {
                         if($key == 'date'){
-                            $fecha = date_format(date_create($value), 'd/m/Y');
+                            $fecha_original = date_format(date_create($value), 'd/m/Y');
                         }
                     }
 
-                    if ($row['caja_cuota'] != 0){
-                        $movimiento = 'COBRO DE CUOTA';
+                    foreach ($row['movimiento_fecha_reversion'] as $key => $value) {
+                        if($key == 'date'){
+                            $fecha_reversion = date_format(date_create($value), 'd/m/Y');
+                        }
+                    }
+
+                    if ($row['operacion_cuota'] != 0){
+                        $tipo = 'COBRO DE CUOTA';
                     } else {
-                        $movimiento = 'DESEMBOLSO';
+                        $tipo = 'DESEMBOLSO';
                     }
                     
                     $detalle = array(
-                        'caja_cuenta'               => $row['caja_cuenta'],
-                        'caja_operacion'            => $row['caja_operacion'],
-                        'caja_movimiento'           => $movimiento,
-                        'caja_banca'                => $row['caja_banca'],
-                        'caja_cuota'                => $row['caja_cuota'],
-                        'caja_fecha'                => $fecha,
-                        'caja_hora'                 => $row['caja_hora'],
-                        'caja_monto'                => $row['caja_monto'],
-                        'caja_numero_movimiento'    => $row['caja_numero_movimiento'],
-                        'caja_numero_factura'       => $row['caja_numero_factura'],
-                        'caja_numero_recibo'        => $row['caja_numero_recibo']
+                        'comprobante_tipo'                  => $tipo,
+                        'comprobante_timbrado_numero'       => $row['comprobante_timbrado_numero'],
+                        'comprobante_timbrado_vencimiento'  => $row['comprobante_timbrado_vencimiento'],
+                        'comprobante_numero'                => $row['comprobante_numero'],
+                        'comprobante_cantidad_impreso'      => $row['comprobante_cantidad_impreso'],
+                        'movimiento_numero_original'        => $row['movimiento_numero_original'],
+                        'movimiento_numero_reversion'       => $row['movimiento_numero_reversion'],
+                        'movimiento_usuario_original'       => $row['movimiento_usuario_original'],
+                        'movimiento_usuario_reversion'      => $row['movimiento_usuario_reversion'],
+                        'movimiento_fecha_original'         => $fecha_original,
+                        'movimiento_fecha_reversion'        => $fecha_reversion,
+                        'movimiento_hora_original'          => $row['movimiento_hora_original'],
+                        'movimiento_hora_reversion'         => $row['movimiento_hora_reversion'],
+                        'operacion_numero'                  => $row['operacion_numero'],
+                        'operacion_cuota'                   => $row['operacion_cuota'],
+                        'persona_nombre'                    => $row['persona_nombre'],
+                        'persona_documento'                 => $row['persona_documento'],
+                        'persona_cuenta'                    => $row['persona_cuenta'],
+                        'persona_direccion'                 => $row['persona_direccion'],
+                        'persona_telefono'                  => $row['persona_telefono'],
+                        'estado_codigo'                     => $row['estado_codigo'],
+                        'estado_nombre'                     => $row['estado_nombre'],
+                        'tipo_codigo'                       => $row['tipo_codigo'],
+                        'tigo_nombre'                       => $row['tigo_nombre'],
+                        'condicion_codigo'                  => $row['condicion_codigo'],
+                        'condicion_nombre'                  => $row['condicion_nombre'],
+                        'pago_codigo'                       => $row['pago_codigo'],
+                        'pago_nombre'                       => $row['pago_nombre'],
+                        'banca_codigo'                      => $row['banca_codigo'],
+                        'banca_nombre'                      => $row['banca_nombre']
                     );
 
                     $result[] = $detalle;
@@ -148,17 +203,36 @@
                     $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Consulta con exito', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
                 } else {
                     $detalle = array(
-                        'caja_cuenta'               => '',
-                        'caja_operacion'            => '',
-                        'caja_movimiento'           => '',
-                        'caja_banca'                => '',
-                        'caja_cuota'                => '',
-                        'caja_fecha'                => '',
-                        'caja_hora'                 => '',
-                        'caja_monto'                => '',
-                        'caja_numero_movimiento'    => '',
-                        'caja_numero_factura'       => '',
-                        'caja_numero_recibo'        => ''
+                        'comprobante_tipo'                  => '',
+                        'comprobante_timbrado_numero'       => '',
+                        'comprobante_timbrado_vencimiento'  => '',
+                        'comprobante_numero'                => '',
+                        'comprobante_cantidad_impreso'      => '',
+                        'movimiento_numero_original'        => '',
+                        'movimiento_numero_reversion'       => '',
+                        'movimiento_usuario_original'       => '',
+                        'movimiento_usuario_reversion'      => '',
+                        'movimiento_fecha_original'         => '',
+                        'movimiento_fecha_reversion'        => '',
+                        'movimiento_hora_original'          => '',
+                        'movimiento_hora_reversion'         => '',
+                        'operacion_numero'                  => '',
+                        'operacion_cuota'                   => '',
+                        'persona_nombre'                    => '',
+                        'persona_documento'                 => '',
+                        'persona_cuenta'                    => '',
+                        'persona_direccion'                 => '',
+                        'persona_telefono'                  => '',
+                        'estado_codigo'                     => '',
+                        'estado_nombre'                     => '',
+                        'tipo_codigo'                       => '',
+                        'tigo_nombre'                       => '',
+                        'condicion_codigo'                  => '',
+                        'condicion_nombre'                  => '',
+                        'pago_codigo'                       => '',
+                        'pago_nombre'                       => '',
+                        'banca_codigo'                      => '',
+                        'banca_nombre'                      => ''
                     );
 
                     header("Content-Type: application/json; charset=utf-8");
@@ -270,42 +344,102 @@
         
         if (isset($val01) && isset($val02) && isset($val03)) {
             $sql_0  = "SELECT
+            a.COMPCABCTN                        AS      comprobante_timbrado_numero,
+            CONVERT(date, a.COMPCABCTV, 103)    AS      comprobante_timbrado_vencimiento,
+            a.COMPCABCNU                        AS      comprobante_numero,
+            a.COMPCABCCI                        AS      comprobante_cantidad_impreso,
 
-            a.cucuen                        AS      caja_cuenta,
-            a.cuope1                        AS      caja_operacion,
-            a.cucuot                        AS      caja_cuota,
-            b.crnomb                        AS      caja_banca,
-            CONVERT(date, a.Cufech, 103)    AS      caja_fecha,
-            a.cuhora                        AS      caja_hora,
-            a.CuMont                        AS      caja_monto,
-            a.cumonn                        AS      caja_numero_movimiento,
-            a.cufact                        AS      caja_numero_factura,
-            a.CURECIBO                      AS      caja_numero_recibo
+            a.COMPCABMNO                        AS      movimiento_numero_original,
+            a.COMPCABMNR                        AS      movimiento_numero_reversion,
+            a.COMPCABMUO                        AS      movimiento_usuario_original,
+            a.COMPCABMUR                        AS      movimiento_usuario_reversion,
+            CONVERT(date, a.COMPCABMFO, 103)    AS      movimiento_fecha_original,
+            CONVERT(date, a.COMPCABMFR, 103)    AS      movimiento_fecha_reversion,
+            a.COMPCABMHO                        AS      movimiento_hora_original,
+            a.COMPCABMHR                        AS      movimiento_hora_reversion,
+
+            a.COMPCABONU                        AS      operacion_numero,
+            a.COMPCABOCU                        AS      operacion_cuota,
+
+            a.COMPCABPNO                        AS      persona_nombre,
+            a.COMPCABPDO                        AS      persona_documento,
+            a.COMPCABPCU                        AS      persona_cuenta,
+            a.COMPCABPDI                        AS      persona_direccion,
+            a.COMPCABPTE                        AS      persona_telefono,
+
+            b.COMPESTCOD                        AS      estado_codigo,
+            b.COMPESTNOM                        AS      estado_nombre,
+
+            c.COMPTIPCOD                        AS      tipo_codigo,
+            c.COMPTIPNOM                        AS      tigo_nombre,
+
+            d.COMPCONCOD                        AS      condicion_codigo,
+            d.COMPCONNOM                        AS      condicion_nombre,
+
+            e.COMPPAGCOD                        AS      pago_codigo,
+            e.COMPPAGNOM                        AS      pago_nombre, 
             
-            FROM FSD015 a
-            INNER JOIN FST020 b ON a.cuagen = b.crbanca
+            f.crbanca                           AS      banca_codigo,
+            f.crnomb                            AS      banca_nombre
 
-            WHERE a.cucuen = ? AND a.Cufech >= ? AND a.Cufech <= ? AND a.cutipo IN (51, 53)
-            ORDER BY a.Cufech DESC";
+            FROM COMPCAB a
+            INNER JOIN COMPEST b ON a.COMPESTCOD = b.COMPESTCOD
+            INNER JOIN COMPTIP c ON a.COMPTIPCOD = c.COMPTIPCOD
+            INNER JOIN COMPCON d ON a.COMPCONCOD = d.COMPCONCOD
+            INNER JOIN COMPPAG e ON a.COMPPAGCOD = e.COMPPAGCOD
+            INNER JOIN FST020 f ON a.COMPCABOBA = f.crbanca
+
+            WHERE a.COMPCABPCU = ? AND a.COMPCABMFO >= ? AND a.COMPCABMFO <= ? 
+            ORDER BY a.COMPCABMFO DESC";
 
             $sql_1  = "SELECT
+            a.COMPCABCTN                        AS      comprobante_timbrado_numero,
+            CONVERT(date, a.COMPCABCTV, 103)    AS      comprobante_timbrado_vencimiento,
+            a.COMPCABCNU                        AS      comprobante_numero,
+            a.COMPCABCCI                        AS      comprobante_cantidad_impreso,
 
-            a.cucuen                        AS      caja_cuenta,
-            a.cuope1                        AS      caja_operacion,
-            a.cucuot                        AS      caja_cuota,
-            b.crnomb                        AS      caja_banca,
-            CONVERT(date, a.Cufech, 103)    AS      caja_fecha,
-            a.cuhora                        AS      caja_hora,
-            a.CuMont                        AS      caja_monto,
-            a.cumonn                        AS      caja_numero_movimiento,
-            a.cufact                        AS      caja_numero_factura,
-            a.CURECIBO                      AS      caja_numero_recibo
+            a.COMPCABMNO                        AS      movimiento_numero_original,
+            a.COMPCABMNR                        AS      movimiento_numero_reversion,
+            a.COMPCABMUO                        AS      movimiento_usuario_original,
+            a.COMPCABMUR                        AS      movimiento_usuario_reversion,
+            CONVERT(date, a.COMPCABMFO, 103)    AS      movimiento_fecha_original,
+            CONVERT(date, a.COMPCABMFR, 103)    AS      movimiento_fecha_reversion,
+            a.COMPCABMHO                        AS      movimiento_hora_original,
+            a.COMPCABMHR                        AS      movimiento_hora_reversion,
 
-            FROM FSD015 a
-            INNER JOIN FST020 b ON a.cuagen = b.crbanca
-            INNER JOIN FSD0122 c ON a.cuope1 = c.bfope1 AND a.cucuen = c.aacuen
+            a.COMPCABONU                        AS      operacion_numero,
+            a.COMPCABOCU                        AS      operacion_cuota,
 
-            WHERE a.cucuen = ? AND a.Cufech >= ? AND a.Cufech <= ? AND c.bfEsta = ?
+            a.COMPCABPNO                        AS      persona_nombre,
+            a.COMPCABPDO                        AS      persona_documento,
+            a.COMPCABPCU                        AS      persona_cuenta,
+            a.COMPCABPDI                        AS      persona_direccion,
+            a.COMPCABPTE                        AS      persona_telefono,
+
+            b.COMPESTCOD                        AS      estado_codigo,
+            b.COMPESTNOM                        AS      estado_nombre,
+
+            c.COMPTIPCOD                        AS      tipo_codigo,
+            c.COMPTIPNOM                        AS      tigo_nombre,
+
+            d.COMPCONCOD                        AS      condicion_codigo,
+            d.COMPCONNOM                        AS      condicion_nombre,
+
+            e.COMPPAGCOD                        AS      pago_codigo,
+            e.COMPPAGNOM                        AS      pago_nombre, 
+            
+            f.crbanca                           AS      banca_codigo,
+            f.crnomb                            AS      banca_nombre
+
+            FROM COMPCAB a
+            INNER JOIN COMPEST b ON a.COMPESTCOD = b.COMPESTCOD
+            INNER JOIN COMPTIP c ON a.COMPTIPCOD = c.COMPTIPCOD
+            INNER JOIN COMPCON d ON a.COMPCONCOD = d.COMPCONCOD
+            INNER JOIN COMPPAG e ON a.COMPPAGCOD = e.COMPPAGCOD
+            INNER JOIN FST020 f ON a.COMPCABOBA = f.crbanca
+            INNER JOIN FSD0122 g ON a.COMPCABONU = g.bfope1 AND a.COMPCABPCU = g.aacuen
+
+            WHERE a.COMPCABPCU = ? AND a.COMPCABMFO >= ? AND a.COMPCABMFO <= ? AND g.bfEsta = ?
             ORDER BY a.Cufech DESC";
 
             if($val04 == 1){
@@ -321,30 +455,55 @@
                 $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Hubo un error al momento de ingresar'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
             } else {
                 while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                    foreach ($row['caja_fecha'] as $key => $value) {
+                    foreach ($row['movimiento_fecha_original'] as $key => $value) {
                         if($key == 'date'){
-                            $fecha = date_format(date_create($value), 'd/m/Y');
+                            $fecha_original = date_format(date_create($value), 'd/m/Y');
                         }
                     }
 
-                    if ($row['caja_cuota'] != 0){
-                        $movimiento = 'COBRO DE CUOTA';
+                    foreach ($row['movimiento_fecha_reversion'] as $key => $value) {
+                        if($key == 'date'){
+                            $fecha_reversion = date_format(date_create($value), 'd/m/Y');
+                        }
+                    }
+
+                    if ($row['operacion_cuota'] != 0){
+                        $tipo = 'COBRO DE CUOTA';
                     } else {
-                        $movimiento = 'DESEMBOLSO';
+                        $tipo = 'DESEMBOLSO';
                     }
                     
                     $detalle = array(
-                        'caja_cuenta'               => $row['caja_cuenta'],
-                        'caja_operacion'            => $row['caja_operacion'],
-                        'caja_movimiento'           => $movimiento,
-                        'caja_cuota'                => $row['caja_cuota'],
-                        'caja_banca'                => $row['caja_banca'],
-                        'caja_fecha'                => $fecha,
-                        'caja_hora'                 => $row['caja_hora'],
-                        'caja_monto'                => $row['caja_monto'],
-                        'caja_numero_movimiento'    => $row['caja_numero_movimiento'],
-                        'caja_numero_factura'       => $row['caja_numero_factura'],
-                        'caja_numero_recibo'        => $row['caja_numero_recibo']
+                        'comprobante_tipo'                  => $tipo,
+                        'comprobante_timbrado_numero'       => $row['comprobante_timbrado_numero'],
+                        'comprobante_timbrado_vencimiento'  => $row['comprobante_timbrado_vencimiento'],
+                        'comprobante_numero'                => $row['comprobante_numero'],
+                        'comprobante_cantidad_impreso'      => $row['comprobante_cantidad_impreso'],
+                        'movimiento_numero_original'        => $row['movimiento_numero_original'],
+                        'movimiento_numero_reversion'       => $row['movimiento_numero_reversion'],
+                        'movimiento_usuario_original'       => $row['movimiento_usuario_original'],
+                        'movimiento_usuario_reversion'      => $row['movimiento_usuario_reversion'],
+                        'movimiento_fecha_original'         => $fecha_original,
+                        'movimiento_fecha_reversion'        => $fecha_reversion,
+                        'movimiento_hora_original'          => $row['movimiento_hora_original'],
+                        'movimiento_hora_reversion'         => $row['movimiento_hora_reversion'],
+                        'operacion_numero'                  => $row['operacion_numero'],
+                        'operacion_cuota'                   => $row['operacion_cuota'],
+                        'persona_nombre'                    => $row['persona_nombre'],
+                        'persona_documento'                 => $row['persona_documento'],
+                        'persona_cuenta'                    => $row['persona_cuenta'],
+                        'persona_direccion'                 => $row['persona_direccion'],
+                        'persona_telefono'                  => $row['persona_telefono'],
+                        'estado_codigo'                     => $row['estado_codigo'],
+                        'estado_nombre'                     => $row['estado_nombre'],
+                        'tipo_codigo'                       => $row['tipo_codigo'],
+                        'tigo_nombre'                       => $row['tigo_nombre'],
+                        'condicion_codigo'                  => $row['condicion_codigo'],
+                        'condicion_nombre'                  => $row['condicion_nombre'],
+                        'pago_codigo'                       => $row['pago_codigo'],
+                        'pago_nombre'                       => $row['pago_nombre'],
+                        'banca_codigo'                      => $row['banca_codigo'],
+                        'banca_nombre'                      => $row['banca_nombre']
                     );
 
                     $result[] = $detalle;
@@ -355,17 +514,36 @@
                     $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Consulta con exito', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
                 } else {
                     $detalle = array(
-                        'caja_cuenta'               => '',
-                        'caja_operacion'            => '',
-                        'caja_movimiento'           => '',
-                        'caja_banca'                => '',
-                        'caja_cuota'                => '',
-                        'caja_fecha'                => '',
-                        'caja_hora'                 => '',
-                        'caja_monto'                => '',
-                        'caja_numero_movimiento'    => '',
-                        'caja_numero_factura'       => '',
-                        'caja_numero_recibo'        => ''
+                        'comprobante_tipo'                  => '',
+                        'comprobante_timbrado_numero'       => '',
+                        'comprobante_timbrado_vencimiento'  => '',
+                        'comprobante_numero'                => '',
+                        'comprobante_cantidad_impreso'      => '',
+                        'movimiento_numero_original'        => '',
+                        'movimiento_numero_reversion'       => '',
+                        'movimiento_usuario_original'       => '',
+                        'movimiento_usuario_reversion'      => '',
+                        'movimiento_fecha_original'         => '',
+                        'movimiento_fecha_reversion'        => '',
+                        'movimiento_hora_original'          => '',
+                        'movimiento_hora_reversion'         => '',
+                        'operacion_numero'                  => '',
+                        'operacion_cuota'                   => '',
+                        'persona_nombre'                    => '',
+                        'persona_documento'                 => '',
+                        'persona_cuenta'                    => '',
+                        'persona_direccion'                 => '',
+                        'persona_telefono'                  => '',
+                        'estado_codigo'                     => '',
+                        'estado_nombre'                     => '',
+                        'tipo_codigo'                       => '',
+                        'tigo_nombre'                       => '',
+                        'condicion_codigo'                  => '',
+                        'condicion_nombre'                  => '',
+                        'pago_codigo'                       => '',
+                        'pago_nombre'                       => '',
+                        'banca_codigo'                      => '',
+                        'banca_nombre'                      => ''
                     );
 
                     header("Content-Type: application/json; charset=utf-8");
