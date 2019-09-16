@@ -88,6 +88,7 @@
         
         if (isset($val01)) {
             $sql    = "SELECT TOP 6
+            a.COMPCABCOD                        AS      comprobante_codigo,
             a.COMPCABCTN                        AS      comprobante_timbrado_numero,
             CONVERT(date, a.COMPCABCTV, 103)    AS      comprobante_timbrado_vencimiento,
             a.COMPCABCNU                        AS      comprobante_numero,
@@ -134,7 +135,7 @@
             INNER JOIN FST020 f ON a.COMPCABOBA = f.crbanca
 
             WHERE a.COMPCABPCU = ?
-            ORDER BY a.c DESC";
+            ORDER BY a.COMPCABCOD DESC";
 
             $parm   = array($val01);
             $stmt   = sqlsrv_query($mssqlConn, $sql, $parm);
@@ -163,6 +164,7 @@
                     }
                     
                     $detalle = array(
+                        'comprobante_codigo'                => $row['comprobante_codigo'],
                         'comprobante_tipo'                  => $tipo,
                         'comprobante_timbrado_numero'       => $row['comprobante_timbrado_numero'],
                         'comprobante_timbrado_vencimiento'  => $row['comprobante_timbrado_vencimiento'],
@@ -203,6 +205,7 @@
                     $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Consulta con exito', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
                 } else {
                     $detalle = array(
+                        'comprobante_codigo'                => '',
                         'comprobante_tipo'                  => '',
                         'comprobante_timbrado_numero'       => '',
                         'comprobante_timbrado_vencimiento'  => '',
@@ -344,6 +347,7 @@
         
         if (isset($val01) && isset($val02) && isset($val03)) {
             $sql_0  = "SELECT
+            a.COMPCABCOD                        AS      comprobante_codigo,
             a.COMPCABCTN                        AS      comprobante_timbrado_numero,
             CONVERT(date, a.COMPCABCTV, 103)    AS      comprobante_timbrado_vencimiento,
             a.COMPCABCNU                        AS      comprobante_numero,
@@ -393,6 +397,7 @@
             ORDER BY a.COMPCABMFO DESC";
 
             $sql_1  = "SELECT
+            a.COMPCABCOD                        AS      comprobante_codigo,
             a.COMPCABCTN                        AS      comprobante_timbrado_numero,
             CONVERT(date, a.COMPCABCTV, 103)    AS      comprobante_timbrado_vencimiento,
             a.COMPCABCNU                        AS      comprobante_numero,
@@ -440,7 +445,7 @@
             INNER JOIN FSD0122 g ON a.COMPCABONU = g.bfope1 AND a.COMPCABPCU = g.aacuen
 
             WHERE a.COMPCABPCU = ? AND a.COMPCABMFO >= ? AND a.COMPCABMFO <= ? AND g.bfEsta = ?
-            ORDER BY a.Cufech DESC";
+            ORDER BY a.COMPCABCOD DESC";
 
             if($val04 == 1){
                 $parm   = array($val01, $val02, $val03);
@@ -474,6 +479,7 @@
                     }
                     
                     $detalle = array(
+                        'comprobante_codigo'                => $row['comprobante_codigo'],
                         'comprobante_tipo'                  => $tipo,
                         'comprobante_timbrado_numero'       => $row['comprobante_timbrado_numero'],
                         'comprobante_timbrado_vencimiento'  => $row['comprobante_timbrado_vencimiento'],
@@ -514,6 +520,7 @@
                     $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Consulta con exito', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
                 } else {
                     $detalle = array(
+                        'comprobante_codigo'                => '',
                         'comprobante_tipo'                  => '',
                         'comprobante_timbrado_numero'       => '',
                         'comprobante_timbrado_vencimiento'  => '',
