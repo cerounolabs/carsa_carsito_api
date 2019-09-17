@@ -408,7 +408,7 @@
             INNER JOIN FST020 f ON a.COMPCABOBA = f.crbanca
 
             WHERE a.COMPCABPCU = ? AND a.COMPCABMFO >= ? AND a.COMPCABMFO <= ? 
-            ORDER BY a.COMPCABMFO DESC";
+            ORDER BY a.COMPCABCOD DESC";
 
             $sql_1  = "SELECT
             a.COMPCABCOD                        AS      comprobante_codigo,
