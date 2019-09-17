@@ -200,7 +200,7 @@
             c.COMPIMPCOD                        AS      detalle_impuesto_codigo,
             c.COMPIMPNOM                        AS      detalle_impuesto_nombre
 
-            FROM COMPCAB a
+            FROM COMPDET a
             INNER JOIN COMPCTO b ON a.COMPCTOCOD = b.COMPCTOCOD
             INNER JOIN COMPIMP c ON a.COMPIMPCOD = c.COMPIMPCOD
 
