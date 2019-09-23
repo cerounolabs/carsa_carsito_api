@@ -5,7 +5,7 @@
         $val00      = $request->getAttribute('codigo');
         
         if (isset($val00)) {
-            $sql00  = "UPDATE COMPCAB SET COMPCABCCI = (COMPCABCCI + 1) WHERE COMPCABCOD = ?";
+            $sql00  = "UPDATE COMPCAB SET COMPCABCCI = COMPCABCCI + 1 WHERE COMPCABCOD = ?";
 
             try {
                 $connMYSQL  = getConnectionMYSQL();
