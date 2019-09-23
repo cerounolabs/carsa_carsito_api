@@ -56,7 +56,7 @@
             INNER JOIN COMPCON d ON a.COMPCONCOD = d.COMPCONCOD
             INNER JOIN FST066 e ON a.COMPPAGCOD = e.FoPago
             INNER JOIN FST020 f ON a.COMPCABOBA = f.crbanca
-            LEFT JOIN Motrev g ON a.COMPCABREV = f.MotCod
+            LEFT JOIN Motrev g ON a.COMPCABREV = g.MotCod
 
             WHERE a.COMPCABCOD = ?
             ORDER BY a.COMPCABCOD DESC";
