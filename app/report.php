@@ -41,18 +41,22 @@
             d.COMPCONCOD                        AS      condicion_codigo,
             d.COMPCONNOM                        AS      condicion_nombre,
 
-            e.COMPPAGCOD                        AS      pago_codigo,
-            e.COMPPAGNOM                        AS      pago_nombre, 
+            e.FoPago                            AS      pago_codigo,
+            e.FoDesc                            AS      pago_nombre, 
             
             f.crbanca                           AS      banca_codigo,
-            f.crnomb                            AS      banca_nombre
+            f.crnomb                            AS      banca_nombre,
+
+            g.MotCod                            AS      reversion_codigo,
+            g.MotDsc                            AS      reversion_nombre
 
             FROM COMPCAB a
             INNER JOIN COMPEST b ON a.COMPESTCOD = b.COMPESTCOD
             INNER JOIN COMPTIP c ON a.COMPTIPCOD = c.COMPTIPCOD
             INNER JOIN COMPCON d ON a.COMPCONCOD = d.COMPCONCOD
-            INNER JOIN COMPPAG e ON a.COMPPAGCOD = e.COMPPAGCOD
+            INNER JOIN FST066 e ON a.COMPPAGCOD = e.FoPago
             INNER JOIN FST020 f ON a.COMPCABOBA = f.crbanca
+            LEFT JOIN Motrev g ON a.COMPCABREV = f.MotCod
 
             WHERE a.COMPCABCOD = ?
             ORDER BY a.COMPCABCOD DESC";
@@ -122,7 +126,9 @@
                         'pago_codigo'                       => $row['pago_codigo'],
                         'pago_nombre'                       => $row['pago_nombre'],
                         'banca_codigo'                      => $row['banca_codigo'],
-                        'banca_nombre'                      => $row['banca_nombre']
+                        'banca_nombre'                      => $row['banca_nombre'],
+                        'reversion_codigo'                  => $row['reversion_codigo'],
+                        'reversion_nombre'                  => $row['reversion_nombre']
                     );
 
                     $result[] = $detalle;
@@ -165,7 +171,9 @@
                         'pago_codigo'                       => '',
                         'pago_nombre'                       => '',
                         'banca_codigo'                      => '',
-                        'banca_nombre'                      => ''
+                        'banca_nombre'                      => '',
+                        'reversion_codigo'                  => '',
+                        'reversion_nombre'                  => ''
                     );
 
                     header("Content-Type: application/json; charset=utf-8");
