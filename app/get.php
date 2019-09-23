@@ -138,7 +138,7 @@
             INNER JOIN COMPCON d ON a.COMPCONCOD = d.COMPCONCOD
             INNER JOIN FST066 e ON a.COMPPAGCOD = e.FoPago
             INNER JOIN FST020 f ON a.COMPCABOBA = f.crbanca
-            LEFT JOIN Motrev g ON a.COMPCABREV = f.MotCod
+            LEFT JOIN Motrev g ON a.COMPCABREV = g.MotCod
 
             WHERE a.COMPCABPCU = ?
             ORDER BY a.COMPCABCOD DESC";
@@ -417,7 +417,7 @@
             INNER JOIN COMPCON d ON a.COMPCONCOD = d.COMPCONCOD
             INNER JOIN FST066 e ON a.COMPPAGCOD = e.FoPago
             INNER JOIN FST020 f ON a.COMPCABOBA = f.crbanca
-            LEFT JOIN Motrev g ON a.COMPCABREV = f.MotCod
+            LEFT JOIN Motrev g ON a.COMPCABREV = g.MotCod
 
             WHERE a.COMPCABPCU = ? AND a.COMPCABMFO >= ? AND a.COMPCABMFO <= ? 
             ORDER BY a.COMPCABCOD DESC";
@@ -473,7 +473,7 @@
             INNER JOIN COMPCON d ON a.COMPCONCOD = d.COMPCONCOD
             INNER JOIN FST066 e ON a.COMPPAGCOD = e.FoPago
             INNER JOIN FST020 f ON a.COMPCABOBA = f.crbanca
-            LEFT JOIN Motrev g ON a.COMPCABREV = f.MotCod
+            LEFT JOIN Motrev g ON a.COMPCABREV = g.MotCod
 
             WHERE a.COMPCABPCU = ? AND a.COMPCABMFO >= ? AND a.COMPCABMFO <= ? AND g.bfEsta = ?
             ORDER BY a.COMPCABCOD DESC";
