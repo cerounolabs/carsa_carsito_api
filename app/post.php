@@ -14,7 +14,7 @@
         $val10  = '';//$request->getParsedBody()['usuario_var10'];
         $val11  = date('Ymd H:i:s.v');
         $val12  = date('H:i:s');
-        $val13  = date("YmdHis");
+        $val13  = intval(date("YmdHis"));
         
         if (isset($val13) && isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val07) && isset($val08) && isset($val09)) {
             $sql    = "INSERT INTO COMPLOG (COMPLOGCOD, COMPLOGTEC, COMPLOGTDC, COMPLOGDOC, COMPLOGMAI, COMPLOGTEL, COMPLOGFEC, COMPLOGHOR, COMPLOGUUI, COMPLOGPIN, COMPLOGHUI, COMPLOGHUH, COMPLOGHUA, COMPLOGHUR) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
